@@ -1,0 +1,30 @@
+#
+vpath %.deb $(TOP)
+
+.PHONY: usage upgrade get $(APPNAME) install clean
+
+# default
+usage:
+	@echo ""
+	@echo ">>> Welcome $(APPNAME) Configuration Environment."
+	@echo ""
+	@echo "    make get       : Clean and Download $(APPNAME)"
+	@echo "    make install   : Install $(APPNAME) through apt"
+	@echo "    make usage     : This screen (default)"
+	@echo "    make upgrade   : Reinstall $(APPNAME) (get, and install)"
+	@echo "    make clean     : Remove the downloaded $(APPNAME)"
+	@echo ""
+
+upgrade: install 
+
+get: clean $(APPNAME)
+
+$(APPNAME):
+	@wget -c $(SRC_URL)
+
+install: get
+	@sudo apt install -y $(TOP)/$(SRC_NAME)
+
+clean:
+	@-rm -f $(APPNAME)
+
