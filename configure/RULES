@@ -1,7 +1,7 @@
 #
 vpath %.deb $(TOP)
 
-.PHONY: usage upgrade get $(APPNAME) install clean
+.PHONY: usage update get $(APPNAME) install clean
 
 # default
 usage:
@@ -11,11 +11,13 @@ usage:
 	@echo "    make get       : Clean and Download $(APPNAME)"
 	@echo "    make install   : Install $(APPNAME) through apt"
 	@echo "    make usage     : This screen (default)"
-	@echo "    make upgrade   : Reinstall $(APPNAME) (get, and install)"
+	@echo "    make update    : Reinstall $(APPNAME) (clean, install, and start)"
 	@echo "    make clean     : Remove the downloaded $(APPNAME)"
+	@echo "    make stop      : Stop a running zoom"
+	@echo "    make start     : Start a zoom"
 	@echo ""
 
-upgrade: install 
+update: clean stop install start
 
 get: clean $(APPNAME)
 
@@ -27,4 +29,10 @@ install: get
 
 clean:
 	@-rm -f $(APPNAME)
+
+stop:
+	@-pkill -e zoom
+
+start:
+	@zoom &
 
