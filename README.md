@@ -1,5 +1,7 @@
 # zoom-update
 
+![Linter Run](https://github.com/jeonghanlee/zoom-update/workflows/Linter%20Run/badge.svg)
+
 Zoom update Environment in the Debian Linux.
 
 ## Backgroud
