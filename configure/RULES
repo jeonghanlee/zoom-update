@@ -25,7 +25,11 @@ $(APPNAME):
 	@wget -c $(SRC_URL)
 
 install: get
+ifeq "$(OS_DISTRO)" "ID=debian"
 	@sudo apt install -y $(TOP)/$(SRC_NAME)
+else
+	@sudo dnf install -y $(TOP)/$(SRC_NAME)
+endif
 
 clean:
 	@-rm -f $(APPNAME)
