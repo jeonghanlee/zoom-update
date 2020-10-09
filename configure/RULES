@@ -2,7 +2,7 @@
 vpath %.deb $(TOP)
 vpath %.rpm $(TOP)
 
-.PHONY: usage update get $(APPNAME) install clean
+.PHONY: usage update get $(APPNAME) install clean backup
 
 # default
 usage:
@@ -12,7 +12,7 @@ usage:
 	@echo "    make get       : Backup and Download $(APPNAME)"
 	@echo "    make install   : Install $(APPNAME) through apt"
 	@echo "    make usage     : This screen (default)"
-	@echo "    make update    : Reinstall $(APPNAME) (clean, install, and start)"
+	@echo "    make update    : Reinstall $(APPNAME) (backup, install, and start)"
 	@echo "    make clean     : Remove the downloaded $(APPNAME)"
 	@echo "    make backup    : Create backup file if an installation file exists"
 	@echo "    make stop      : Stop a running zoom"
@@ -22,7 +22,6 @@ usage:
 update: get stop install start
 
 get: backup $(APPNAME)
-#get: clean $(APPNAME)
 
 $(APPNAME):
 	@wget -c $(SRC_URL)

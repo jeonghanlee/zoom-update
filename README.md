@@ -2,15 +2,15 @@
 
 ![Linter Run](https://github.com/jeonghanlee/zoom-update/workflows/Linter%20Run/badge.svg)
 
-Zoom update Environment in the Debian Linux.
+Zoom install / update Environment in the Debian / Fedora Linux.
 
 ## Backgroud
 
-Zoom doesn't support an automatic update in Debian Linux, so I have to go their site and download the latest package manually. This repository is designed to reduce this workflow.
+Zoom doesn't support an automatic update in Debian / Fedora Linux, so I have to go their site and download the latest package manually. This repository is designed to reduce this workflow. In addition, one can use this repository in order to install zoom directly.
 
 ## Requirements
 
-The following packages are required.
+The following packages are required. In most cases, they are already installed by default.
 
 ```bash
 wget make procps
@@ -43,11 +43,12 @@ If one has the downloaded zoom installation file locally, the rule triggers an a
 ```bash
 >>> Welcome zoom_amd64.deb Configuration Environment.
 
-    make get       : Clean and Download zoom_amd64.deb
+    make get       : Backup and Download zoom_amd64.deb
     make install   : Install zoom_amd64.deb through apt
     make usage     : This screen (default)
-    make update    : Reinstall zoom_amd64.deb (clean, install, and start)
+    make update    : Reinstall zoom_amd64.deb (backup, install, and start)
     make clean     : Remove the downloaded zoom_amd64.deb
+    make backup    : Create backup file if an installation file exists
     make stop      : Stop a running zoom
     make start     : Start a zoom
 ```
