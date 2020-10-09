@@ -8,6 +8,14 @@ Zoom update Environment in the Debian Linux.
 
 Zoom doesn't support an automatic update in Debian Linux, so I have to go their site and download the latest package manually. This repository is designed to reduce this workflow.
 
+## Requirements
+
+The following packages are required.
+
+```bash
+wget make
+```
+
 ## Update Messages
 
 When one see one of folliwng screens:
@@ -20,7 +28,7 @@ When one see one of folliwng screens:
 | :---: |
 |**Figure 2** : Zoom Main screen |
 
-this repo may help to update Zoom quuickly.
+this repo may help to update Zoom quickly. If there is no zoom in a system, it will install it.
 
 ## Commands
 

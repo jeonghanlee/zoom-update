@@ -19,6 +19,7 @@ usage:
 
 update: clean stop install start
 
+#get: backup $(APPNAME)
 get: clean $(APPNAME)
 
 $(APPNAME):
@@ -40,3 +41,8 @@ stop:
 start:
 	@zoom &
 
+# only valid for Debian machine
+backup:
+ifneq (,$(wildcard $(APPNAME)))
+	@cp $(APPNAME) $(APPNAME)_v$$(dpkg-deb -W $(APPNAME) | cut -f2)
+endif
