@@ -13,7 +13,7 @@ Zoom doesn't support an automatic update in Debian Linux, so I have to go their 
 The following packages are required.
 
 ```bash
-wget make
+wget make procps
 ```
 
 ## Update Messages
