@@ -19,7 +19,7 @@ usage:
 	@echo "    make start     : Start a zoom"
 	@echo ""
 
-update: clean stop install start
+update: get stop install start
 
 get: backup $(APPNAME)
 #get: clean $(APPNAME)
