@@ -8,19 +8,20 @@ usage:
 	@echo ""
 	@echo ">>> Welcome $(APPNAME) Configuration Environment."
 	@echo ""
-	@echo "    make get       : Clean and Download $(APPNAME)"
+	@echo "    make get       : Backup and Download $(APPNAME)"
 	@echo "    make install   : Install $(APPNAME) through apt"
 	@echo "    make usage     : This screen (default)"
 	@echo "    make update    : Reinstall $(APPNAME) (clean, install, and start)"
 	@echo "    make clean     : Remove the downloaded $(APPNAME)"
+	@echo "    make backup    : Create backup file if an installation file exists"
 	@echo "    make stop      : Stop a running zoom"
 	@echo "    make start     : Start a zoom"
 	@echo ""
 
 update: clean stop install start
 
-#get: backup $(APPNAME)
-get: clean $(APPNAME)
+get: backup $(APPNAME)
+#get: clean $(APPNAME)
 
 $(APPNAME):
 	@wget -c $(SRC_URL)
@@ -41,8 +42,11 @@ stop:
 start:
 	@zoom &
 
-# only valid for Debian machine
+
 backup:
 ifneq (,$(wildcard $(APPNAME)))
-	@cp $(APPNAME) $(APPNAME)_v$$(dpkg-deb -W $(APPNAME) | cut -f2)
+ifeq "$(OS_DISTRO)" "ID=debian"
+	@mv $(APPNAME) $(APPNAME)_v$$(dpkg-deb -W $(APPNAME) | cut -f2)
+else
+    @mv $(APPNAME) $(APPNAME)_v$$(rpm -qp --queryformat "%{VERSION}" $(APPNAME) 2>/dev/null)
 endif

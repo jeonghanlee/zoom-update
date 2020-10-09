@@ -36,7 +36,7 @@ this repo may help to update Zoom quickly. If there is no zoom in a system, it w
 make update
 ```
 
-Note that the above command will stop a running zoom if it is.
+If one has the downloaded zoom installation file locally, the rule triggers an additional rule `make backup`. This backup rule renames the exist installation file with an extracted version number suffix, for example, zoom_amd64.deb_v5.3.469451.0927. If the same version file exists, it will overwrite it. In case, the latest version doesn't work, use this backup file to recover it. Note that the above command will stop a running zoom if it is.
 
 ## Rules
 
