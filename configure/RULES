@@ -1,5 +1,6 @@
 #
 vpath %.deb $(TOP)
+vpath %.rpm $(TOP)
 
 .PHONY: usage update get $(APPNAME) install clean
 
