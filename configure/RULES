@@ -48,5 +48,5 @@ ifneq (,$(wildcard $(APPNAME)))
 ifeq "$(OS_DISTRO)" "ID=debian"
 	@mv $(APPNAME) $(APPNAME)_v$$(dpkg-deb -W $(APPNAME) | cut -f2)
 else
-    @mv $(APPNAME) $(APPNAME)_v$$(rpm -qp --queryformat "%{VERSION}" $(APPNAME) 2>/dev/null)
+	@mv $(APPNAME) $(APPNAME)_v$$(rpm -qp --queryformat "%{VERSION}" $(APPNAME) 2>/dev/null)
 endif
