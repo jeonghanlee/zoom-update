@@ -47,6 +47,7 @@ If one has the downloaded zoom installation file locally, the rule triggers an a
     make install   : Install zoom_amd64.deb through apt
     make usage     : This screen (default)
     make update    : Reinstall zoom_amd64.deb (backup, install, and start)
+    make upgrade   : Same as make update
     make clean     : Remove the downloaded zoom_amd64.deb
     make backup    : Create backup file if an installation file exists
     make stop      : Stop a running zoom

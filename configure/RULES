@@ -2,7 +2,7 @@
 vpath %.deb $(TOP)
 vpath %.rpm $(TOP)
 
-.PHONY: usage update get $(APPNAME) install clean backup
+.PHONY: usage upgrade update get $(APPNAME) install clean backup
 
 # default
 usage:
@@ -18,6 +18,8 @@ usage:
 	@echo "    make stop      : Stop a running zoom"
 	@echo "    make start     : Start a zoom"
 	@echo ""
+
+upgrade: update
 
 update: get stop install start
 
