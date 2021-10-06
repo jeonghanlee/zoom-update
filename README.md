@@ -52,4 +52,5 @@ If one has the downloaded zoom installation file locally, the rule triggers an a
     make backup    : Create backup file if an installation file exists
     make stop      : Stop a running zoom
     make start     : Start a zoom
+    make annotate  : Fix for black screen in Zoom when annotation (need xcompmgr)
 ```

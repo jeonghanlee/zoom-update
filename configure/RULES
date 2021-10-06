@@ -53,3 +53,7 @@ else
 	@-mv $(APPNAME) $(APPNAME)_v$$(rpm -qp --queryformat "%{VERSION}" $(APPNAME) 2>/dev/null)
 endif
 endif
+
+
+annotate:
+	@xcompmgr -c -l0 -t0 -r -o.00 &
