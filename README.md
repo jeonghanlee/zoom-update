@@ -13,7 +13,7 @@ Zoom doesn't support an automatic update in Debian / Fedora Linux, so I have to 
 The following packages are required. In most cases, they are already installed by default.
 
 ```bash
-wget make procps
+wget make procps xcompmgr
 ```
 
 ## Update Messages
