@@ -1,9 +1,28 @@
 VARS_EXCLUDES := $(.VARIABLES)
 
-OS_DISTRO := $(shell cat /etc/os-release | grep "^ID")
+UNAME_S:=$(shell uname -s)
+
+ifeq ($(UNAME_S),Darwin)
+OS_VERSION:=$(strip $(shell sw_vers -productVersion))
+OS_NAME:=$(strip $(shell sw_vers -productName))
+endif
+ifeq ($(UNAME_S),Linux)
+OS_VERSION:=$(strip $(shell grep -Po '^VERSION_ID=\K[^d].+' /etc/os-release | sed 's/\"//g'))
+OS_NAME:=$(strip $(shell grep -Po '^ID=\K[^S].+' /etc/os-release | sed 's/\"//g'))
+endif
+
+ifeq ($(strip $(OS_VERSION)),)
+OS_VERSION:=unknownVER
+endif
+
+ifeq ($(strip $(OS_NAME)),)
+OS_VERSION:=unknownOS
+endif
+
+
 
 APPNAME:=zoom_amd64.deb
-ifeq "$(OS_DISTRO)" "ID=fedora"
+ifeq "$(OS_NAME)" "rocky"
 APPNAME:=zoom_x86_64.rpm
 endif
 
