@@ -26,6 +26,13 @@ ifeq "$(OS_NAME)" "rocky"
 APPNAME:=zoom_x86_64.rpm
 endif
 
+ifeq "$(OS_NAME)" "redhat"
+APPNAME:=zoom_x86_64.rpm
+endif
+
+ifeq "$(OS_NAME)" "fedora"
+APPNAME:=zoom_x86_64.rpm
+endif
 
 SRC_URL:=https://zoom.us/client/latest
 
