@@ -18,9 +18,9 @@
 # email   : jeonghan.lee@gmail.com
 # version : 0.0.1
 
-TOP:=$(CURDIR)
-ifneq (1,$(words $(TOP)))
-TOP:=.
+TOP := $(CURDIR)
+ifneq (1, $(words $(TOP)))
+TOP := .
 endif
 
 include $(TOP)/configure/CONFIG

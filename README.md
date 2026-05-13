@@ -2,13 +2,18 @@
 
 ![Linter Run](https://github.com/jeonghanlee/zoom-update/workflows/Linter%20Run/badge.svg)
 
-Zoom install / update Environment in the Debian / Fedora Linux.
+Zoom install and update helper for Debian-family and Fedora-family Linux systems.
 
-## Backgroud
+* Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+* CLI Reference: [docs/ZOOM_CLI.md](docs/ZOOM_CLI.md)
 
-Zoom doesn't support an automatic update in Debian / Fedora Linux, so I have to go their site and download the latest package manually. This repository is designed to reduce this workflow. In addition, one can use this repository in order to install zoom directly.
+## Background
 
-## Requirements
+Zoom for Linux is distributed as package files from the Zoom download site. This
+repository wraps the download, backup, installation, and restart sequence in
+repeatable Makefile targets.
+
+## Prerequisites
 
 The following packages are required. In most cases, they are already installed by default.
 
@@ -16,41 +21,44 @@ The following packages are required. In most cases, they are already installed b
 wget make procps xcompmgr libxcb-xtest0
 ```
 
-## Update Messages
+## Makefile Workflow
 
-When one see one of folliwng screens:
-
-|![0png](docs/zoom1.png)|
-| :---: |
-|**Figure 1** : Zoom About sceen|
-
-|![1png](docs/zoom2.png)|
-| :---: |
-|**Figure 2** : Zoom Main screen |
-
-this repo may help to update Zoom quickly. If there is no zoom in a system, it will install it.
-
-## Commands
+Use `make update` to download the current package, preserve an existing local
+package with its embedded version suffix, install the new package, stop a
+running Zoom process, and start Zoom again.
 
 ```bash
 make update
 ```
 
-If one has the downloaded zoom installation file locally, the rule triggers an additional rule `make backup`. This backup rule renames the exist installation file with an extracted version number suffix, for example, zoom_amd64.deb_v5.3.469451.0927. If the same version file exists, it will overwrite it. In case, the latest version doesn't work, use this backup file to recover it. Note that the above command will stop a running zoom if it is.
+Use `make help` to print all wrapper targets and `make vars` to inspect the
+active OS detection and package variables.
 
-## Rules
+## Direct CLI Workflow
+
+Debian-family systems use the Zoom `.deb` package.
 
 ```bash
->>> Welcome zoom_amd64.deb Configuration Environment.
-
-    make get       : Backup and Download zoom_amd64.deb
-    make install   : Install zoom_amd64.deb through apt
-    make usage     : This screen (default)
-    make update    : Reinstall zoom_amd64.deb (backup, install, and start)
-    make upgrade   : Same as make update
-    make clean     : Remove the downloaded zoom_amd64.deb
-    make backup    : Create backup file if an installation file exists
-    make stop      : Stop a running zoom
-    make start     : Start a zoom
-    make annotate  : Fix for black screen in Zoom when annotation (need xcompmgr)
+wget -c https://zoom.us/client/latest/zoom_amd64.deb
+sudo apt install -y ./zoom_amd64.deb
 ```
+
+Fedora-family systems use the Zoom `.rpm` package.
+
+```bash
+wget -c https://zoom.us/client/latest/zoom_x86_64.rpm
+sudo dnf install -y ./zoom_x86_64.rpm
+```
+
+## Update Indicators
+
+When Zoom reports that an update is available, this repository can apply the
+Linux package update without manually browsing the download site.
+
+|![0png](docs/zoom1.png)|
+| :---: |
+|**Figure 1**: Zoom About screen|
+
+|![1png](docs/zoom2.png)|
+| :---: |
+|**Figure 2**: Zoom Main screen|

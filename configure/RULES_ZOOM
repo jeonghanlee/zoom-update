@@ -1,0 +1,65 @@
+.DEFAULT_GOAL := help
+
+.PHONY: help usage all upgrade update get install clean backup stop start annotate
+.PHONY: check-supported
+
+help: ## Show available targets
+	$(info -----------------------------------------)
+	$(info Make Targets)
+	$(info -----------------------------------------)
+	$(QUIET) awk '/^[a-zA-Z._0-9%-]+:/ {             \
+	  nb = sub(/^## /, "", helpMsg);                  \
+	  if (nb == 0) {                                  \
+	    helpMsg = $$0;                                \
+	    nb = sub(/^[^:]*:.* ## /, "", helpMsg);      \
+	  }                                               \
+	  if (nb) {                                       \
+	    print $$1 "\t" helpMsg;                       \
+	  }                                               \
+	}                                                 \
+	{ helpMsg = $$0 }'                                \
+	$(MAKEFILE_LIST) | column -ts:
+
+usage: help
+
+all: update ## Download, install, and restart Zoom
+
+upgrade: update ## Alias for update
+
+update: get stop install start ## Reinstall Zoom and restart the application
+
+get: check-supported backup $(SRC_NAME) ## Backup existing package and download latest package
+
+$(SRC_NAME): ## Download latest Zoom package for the current OS family
+	$(QUIET) "$(WGET)" -c "$(SRC_URL)"
+
+install: check-supported get ## Install the downloaded Zoom package
+	$(QUIET) $(INSTALL_COMMAND)
+
+clean: ## Remove the current downloaded Zoom package
+	$(QUIET) rm -f "$(SRC_NAME)"
+
+stop: ## Stop a running Zoom process
+	$(QUIET)-"$(PKILL)" -e zoom
+
+start: ## Start Zoom in the background
+	$(QUIET) "$(ZOOM)" &
+
+backup: check-supported ## Rename an existing package with its embedded version
+ifneq (,$(wildcard $(SRC_NAME)))
+ifeq ($(OS_PACKAGE_TYPE),deb)
+	$(QUIET) mv "$(SRC_NAME)" "$(SRC_NAME)_v$$(dpkg-deb -W "$(SRC_NAME)" | cut -f2)"
+else ifeq ($(OS_PACKAGE_TYPE),rpm)
+	$(QUIET) mv "$(SRC_NAME)" "$(SRC_NAME)_v$$(rpm -qp --queryformat "%{VERSION}" "$(SRC_NAME)" 2>/dev/null)"
+endif
+endif
+
+annotate: ## Start xcompmgr to avoid black screen while annotating
+	$(QUIET) "$(XCOMPMGR)" -c -l0 -t0 -r -o.00 &
+
+check-supported:
+ifeq ($(OS_PACKAGE_TYPE),unsupported)
+	$(error Unsupported OS package family: OS_ID=$(OS_ID), OS_ID_LIKE=$(OS_ID_LIKE))
+endif
+
+FORCE:

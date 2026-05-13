@@ -1,0 +1,11 @@
+SUDO ?= sudo
+WGET ?= wget
+PKILL ?= pkill
+ZOOM ?= zoom
+XCOMPMGR ?= xcompmgr
+
+DEB_INSTALLER ?= apt
+RPM_INSTALLER ?= dnf
+
+-include $(TOP)/../CONFIG_SITE.local
+-include $(TOP)/configure/CONFIG_SITE.local

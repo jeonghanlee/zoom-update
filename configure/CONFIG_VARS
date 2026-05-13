@@ -1,0 +1,64 @@
+OS_ID := unknown
+OS_ID_LIKE :=
+OS_VERSION := unknown
+
+ifeq ($(UNAME_S),Darwin)
+OS_ID := macos
+OS_VERSION := $(strip $(shell sw_vers -productVersion 2>/dev/null))
+endif
+
+ifeq ($(UNAME_S),Linux)
+OS_ID := $(strip $(shell perl -ne 'print $$1 if /^ID="?([^"\n]*)"?/' /etc/os-release 2>/dev/null))
+OS_ID_LIKE := $(strip $(shell perl -ne 'print $$1 if /^ID_LIKE="?([^"\n]*)"?/' /etc/os-release 2>/dev/null))
+OS_VERSION := $(strip $(shell perl -ne 'print $$1 if /^VERSION_ID="?([^"\n]*)"?/' /etc/os-release 2>/dev/null))
+endif
+
+ifeq ($(strip $(OS_ID)),)
+OS_ID := unknown
+endif
+
+ifeq ($(strip $(OS_VERSION)),)
+OS_VERSION := unknown
+endif
+
+DEB_OS_IDS := debian ubuntu linuxmint pop
+RPM_OS_IDS := fedora rocky rhel redhat centos almalinux
+
+OS_PACKAGE_TYPE := unsupported
+
+ifneq ($(filter $(OS_ID), $(DEB_OS_IDS)),)
+OS_PACKAGE_TYPE := deb
+endif
+
+ifneq ($(filter $(OS_ID), $(RPM_OS_IDS)),)
+OS_PACKAGE_TYPE := rpm
+endif
+
+ifeq ($(OS_PACKAGE_TYPE),unsupported)
+ifneq ($(filter debian, $(OS_ID_LIKE)),)
+OS_PACKAGE_TYPE := deb
+endif
+endif
+
+ifeq ($(OS_PACKAGE_TYPE),unsupported)
+ifneq ($(filter rhel fedora, $(OS_ID_LIKE)),)
+OS_PACKAGE_TYPE := rpm
+endif
+endif
+
+ifeq ($(OS_PACKAGE_TYPE),deb)
+SRC_NAME := $(ZOOM_DEB_NAME)
+INSTALL_COMMAND := $(SUDO) $(DEB_INSTALLER) install -y $(TOP)/$(SRC_NAME)
+else ifeq ($(OS_PACKAGE_TYPE),rpm)
+SRC_NAME := $(ZOOM_RPM_NAME)
+INSTALL_COMMAND := $(SUDO) $(RPM_INSTALLER) install -y $(TOP)/$(SRC_NAME)
+else
+SRC_NAME := $(ZOOM_DEB_NAME)
+INSTALL_COMMAND :=
+endif
+
+SRC_URL := $(ZOOM_DOWNLOAD_BASE_URL)/$(SRC_NAME)
+
+VARS_ALWAYS += OS_ID OS_ID_LIKE OS_PACKAGE_TYPE OS_VERSION
+VARS_EXCLUDES := $(filter-out OS_ID OS_ID_LIKE OS_VERSION, $(VARS_EXCLUDES))
+VARS_EXCLUDES += DEB_OS_IDS RPM_OS_IDS VARS_ALWAYS
