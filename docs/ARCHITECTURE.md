@@ -18,15 +18,22 @@ suffix, installs the downloaded package, and restarts the Zoom application.
 ```
 make update
   |
-  +-- get
-  |    |
-  |    +-- check-supported
-  |    +-- backup
-  |    +-- download package from Zoom
+  +-- compare installed version with latest version
+  |    (read from the zoom.us/client/latest redirect, no download)
   |
-  +-- stop
-  +-- install
-  +-- start
+  +-- already current: print message and stop
+  |
+  +-- otherwise: make force-update
+       |
+       +-- get
+       |    |
+       |    +-- check-supported
+       |    +-- backup
+       |    +-- download package from Zoom
+       |
+       +-- stop
+       +-- install
+       +-- start
 ```
 
 ## Directory Structure
@@ -74,6 +81,7 @@ zoom-update/
 | Package file | `zoom_amd64.deb` | `zoom_x86_64.rpm` |
 | Installer | `sudo apt install -y` | `sudo dnf install -y` |
 | Version extraction | `dpkg-deb -W` | `rpm -qp --queryformat` |
+| Installed version | `dpkg-query -W` | `rpm -q --queryformat` |
 | Detection source | `/etc/os-release` `ID` or `ID_LIKE` | `/etc/os-release` `ID` or `ID_LIKE` |
 
 ## Variable Scoping
@@ -82,6 +90,6 @@ zoom-update/
 |---|---|---|
 | Project identity | `configure/RELEASE` | `APPNAME`, `APPVERSION`, package names, download base URL |
 | Site override | `configure/CONFIG_SITE` | Commands and installer names that may vary by host |
-| Derived runtime | `configure/CONFIG_VARS` | OS metadata, package type, package URL, install command |
+| Derived runtime | `configure/CONFIG_VARS` | OS metadata, package type, package URL, install and version commands |
 | Rule behavior | `configure/RULES_FUNC` | Quiet mode and debug shell behavior |
 | User targets | `configure/RULES_ZOOM` | Operational targets used by maintainers |

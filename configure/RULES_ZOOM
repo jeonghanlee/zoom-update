@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help usage all upgrade update get install clean backup stop start annotate
-.PHONY: check-supported
+.PHONY: help usage all upgrade update force-update check get install clean backup
+.PHONY: stop start annotate check-supported
 
 help: ## Show available targets
 	$(info -----------------------------------------)
@@ -26,7 +26,39 @@ all: update ## Download, install, and restart Zoom
 
 upgrade: update ## Alias for update
 
-update: get stop install start ## Reinstall Zoom and restart the application
+# Sets shell variables latest, installed, and current (yes when installed >= latest).
+VERSION_PROBE = latest="$$($(LATEST_VERSION_COMMAND))";                     \
+	installed="$$($(INSTALLED_VERSION_COMMAND))" || installed="";             \
+	current=no;                                                              \
+	if [ -n "$$latest" ] && [ -n "$$installed" ] &&                          \
+	   [ "$$(printf '%s\n%s\n' "$$latest" "$$installed" | sort -V | tail -n1)" = "$$installed" ]; then \
+	  current=yes;                                                           \
+	fi
+
+update: check-supported ## Update Zoom only when a newer version is available
+	$(QUIET) $(VERSION_PROBE);                                                \
+	if [ "$$current" = yes ]; then                                           \
+	  printf "Zoom %s is already the latest version. Nothing to do.\n" "$$installed"; \
+	else                                                                     \
+	  if [ -z "$$latest" ]; then                                             \
+	    printf "Could not determine the latest Zoom version; updating anyway.\n"; \
+	  else                                                                   \
+	    printf "Updating Zoom %s -> %s\n" "$${installed:-(not installed)}" "$$latest"; \
+	  fi;                                                                    \
+	  $(MAKE) --no-print-directory force-update;                             \
+	fi
+
+force-update: get stop install start ## Reinstall Zoom and restart the application
+
+check: check-supported ## Show installed and latest available Zoom versions
+	$(QUIET) $(VERSION_PROBE);                                                \
+	printf "Installed : %s\n" "$${installed:-(not installed)}";              \
+	printf "Latest    : %s\n" "$${latest:-(unknown)}";                        \
+	if [ "$$current" = yes ]; then                                           \
+	  printf "Zoom is up to date.\n";                                        \
+	else                                                                     \
+	  printf "An update is available. Run 'make update'.\n";                 \
+	fi
 
 get: check-supported backup $(SRC_NAME) ## Backup existing package and download latest package
 
