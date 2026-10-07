@@ -1,6 +1,7 @@
 APPNAME := zoom-update
 APPVERSION := 0.0.1
 
+ZOOM_PACKAGE_NAME := zoom
 ZOOM_DEB_NAME := zoom_amd64.deb
 ZOOM_RPM_NAME := zoom_x86_64.rpm
 ZOOM_DOWNLOAD_BASE_URL := https://zoom.us/client/latest

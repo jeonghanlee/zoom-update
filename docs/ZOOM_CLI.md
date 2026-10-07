@@ -8,6 +8,22 @@ Makefile targets.
 **Out of scope:** Zoom account management, meeting operation, and upstream Zoom
 release selection.
 
+## Version Check
+
+```bash
+wget --spider -S --max-redirect=0 https://zoom.us/client/latest/zoom_x86_64.rpm 2>&1 | grep -oE '/prod/[0-9.]+/' | head -n1 | cut -d/ -f3
+```
+
+```bash
+dpkg-query -W -f='${Version}' zoom
+```
+
+```bash
+rpm -q --queryformat '%{VERSION}' zoom
+```
+
+---
+
 ## Download
 
 ```bash
@@ -79,7 +95,15 @@ make install
 ```
 
 ```bash
+make check
+```
+
+```bash
 make update
+```
+
+```bash
+make force-update
 ```
 
 ```bash

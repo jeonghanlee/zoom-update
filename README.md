@@ -23,13 +23,19 @@ wget make procps xcompmgr libxcb-xtest0
 
 ## Makefile Workflow
 
-Use `make update` to download the current package, preserve an existing local
-package with its embedded version suffix, install the new package, stop a
-running Zoom process, and start Zoom again.
+Use `make update` to compare the installed Zoom version with the latest
+version published by Zoom. If Zoom is already current, it reports that and
+exits without downloading anything or asking for `sudo`. Otherwise it downloads
+the current package, preserves an existing local package with its embedded
+version suffix, stops a running Zoom process, installs the new package, and
+starts Zoom again.
 
 ```bash
 make update
 ```
+
+Use `make check` to only report the installed and latest versions, and
+`make force-update` to reinstall regardless of the installed version.
 
 Use `make help` to print all wrapper targets and `make vars` to inspect the
 active OS detection and package variables.

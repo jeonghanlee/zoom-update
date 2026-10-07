@@ -49,15 +49,22 @@ endif
 ifeq ($(OS_PACKAGE_TYPE),deb)
 SRC_NAME := $(ZOOM_DEB_NAME)
 INSTALL_COMMAND := $(SUDO) $(DEB_INSTALLER) install -y $(TOP)/$(SRC_NAME)
+INSTALLED_VERSION_COMMAND := dpkg-query -W -f='$${Version}' $(ZOOM_PACKAGE_NAME) 2>/dev/null
 else ifeq ($(OS_PACKAGE_TYPE),rpm)
 SRC_NAME := $(ZOOM_RPM_NAME)
 INSTALL_COMMAND := $(SUDO) $(RPM_INSTALLER) install -y $(TOP)/$(SRC_NAME)
+INSTALLED_VERSION_COMMAND := rpm -q --queryformat '%{VERSION}' $(ZOOM_PACKAGE_NAME) 2>/dev/null
 else
 SRC_NAME := $(ZOOM_DEB_NAME)
 INSTALL_COMMAND :=
+INSTALLED_VERSION_COMMAND := true
 endif
 
 SRC_URL := $(ZOOM_DOWNLOAD_BASE_URL)/$(SRC_NAME)
+
+# The latest URL redirects to .../prod/<version>/<package>, so the newest
+# version can be read from the redirect without downloading the package.
+LATEST_VERSION_COMMAND := "$(WGET)" --spider -S --max-redirect=0 "$(SRC_URL)" 2>&1 | grep -oE '/prod/[0-9.]+/' | head -n1 | cut -d/ -f3
 
 VARS_ALWAYS += OS_ID OS_ID_LIKE OS_PACKAGE_TYPE OS_VERSION
 VARS_EXCLUDES := $(filter-out OS_ID OS_ID_LIKE OS_VERSION, $(VARS_EXCLUDES))
